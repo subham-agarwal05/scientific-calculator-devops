@@ -39,8 +39,23 @@ pipeline {
 
         stage('Deploy with Ansible') {
             steps {
-                // This command runs Ansible directly on your computer
-                sh 'ansible-playbook ansible/deploy.yml'
+                script {
+                    echo "--- Running Diagnostics ---"
+                    sh 'echo "1. Jenkins is running as user:"'
+                    sh 'whoami'
+                    
+                    sh 'echo "\n2. The PATH variable Jenkins is using:"'
+                    sh 'echo $PATH'
+
+                    sh 'echo "\n3. Which ansible-playbook Jenkins is finding:"'
+                    sh 'which ansible-playbook'
+
+                    sh 'echo "\n4. Permissions of the file found by Jenkins:"'
+                    sh 'ls -l $(which ansible-playbook)'
+                    
+                    echo "--- Attempting to Run Ansible ---"
+                    sh 'ansible-playbook ansible/deploy.yml'
+                }
             }
         }
     }
