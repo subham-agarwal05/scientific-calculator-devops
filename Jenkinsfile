@@ -38,7 +38,12 @@ pipeline {
 
         stage('Deploy with Ansible') {
             steps {
-                sh 'ansible-playbook ansible/deploy.yml'
+                sh '''
+                    docker run --rm \\
+                        -v ${WORKSPACE}/ansible:/etc/ansible \\
+                        williamyeh/ansible:ubuntu16.04 \\
+                        ansible-playbook /etc/ansible/deploy.yml
+                '''
             }
         }
     }
