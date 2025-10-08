@@ -13,21 +13,24 @@ pipeline {
             }
         }
 
-        stage('Run Tests') {
+        stage('Build Docker Image') {
             steps {
-                sh 'pip install -r requirements.txt'
-                sh 'python -m pytest test_calculator.py'
+                // Build the image. The tests will run inside this environment.
+                sh 'docker build -t $DOCKER_IMAGE .'
             }
         }
 
-        stage('Build Docker Image') {
+        stage('Run Tests Inside Container') {
             steps {
-                sh 'docker build -t $DOCKER_IMAGE .'
+                // Run tests inside a container from the image we just built.
+                // The container is automatically removed after the command finishes.
+                sh 'docker run --rm $DOCKER_IMAGE python -m pytest test_calculator.py'
             }
         }
 
         stage('Push to DockerHub') {
             steps {
+                // This stage now runs only after the tests have passed.
                 sh 'echo $DOCKERHUB_CREDENTIALS_PSW | docker login -u $DOCKERHUB_CREDENTIALS_USR --password-stdin'
                 sh 'docker push $DOCKER_IMAGE'
             }
