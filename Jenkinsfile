@@ -4,6 +4,7 @@ pipeline {
     environment {
         DOCKERHUB_CREDENTIALS = credentials('dockerhub-credentials')
         DOCKER_IMAGE = "subhamagarwal05/scientific-calculator"
+        PATH = "/home/subham05/.local/bin:${env.PATH}"
     }
 
     stages {
