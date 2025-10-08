@@ -16,7 +16,7 @@ pipeline {
         stage('Run Tests') {
             steps {
                 sh 'pip install -r requirements.txt'
-                sh 'pytest test_calculator.py'
+                sh 'python -m pytest test_calculator.py'
             }
         }
 
