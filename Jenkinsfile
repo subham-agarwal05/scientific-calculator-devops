@@ -38,12 +38,8 @@ pipeline {
 
         stage('Deploy with Ansible') {
             steps {
-                sh '''
-                    docker run --rm \\
-                        -v ${WORKSPACE}/ansible:/etc/ansible \\
-                        williamyeh/ansible:ubuntu16.04 \\
-                        ansible-playbook /etc/ansible/deploy.yml
-                '''
+                // This command runs Ansible directly on your computer
+                sh 'ansible-playbook ansible/deploy.yml'
             }
         }
     }
