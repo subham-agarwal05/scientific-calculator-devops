@@ -6,13 +6,13 @@
   tasks:
     - name: Pull image from Docker Hub
       community.docker.docker_image:
-        name: yourdockerhubusername/scientific-calculator
+        name: subhamagarwal05/scientific-calculator
         source: pull
 
     - name: Run calculator container
       community.docker.docker_container:
         name: calculator_app
-        image: yourdockerhubusername/scientific-calculator
+        image: subhamagarwal05/scientific-calculator
         state: started
         tty: true
         interactive: true
