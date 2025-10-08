@@ -1,0 +1,18 @@
+---
+- name: Deploy Scientific Calculator Container
+  hosts: localhost
+  become: false
+
+  tasks:
+    - name: Pull image from Docker Hub
+      community.docker.docker_image:
+        name: yourdockerhubusername/scientific-calculator
+        source: pull
+
+    - name: Run calculator container
+      community.docker.docker_container:
+        name: calculator_app
+        image: yourdockerhubusername/scientific-calculator
+        state: started
+        tty: true
+        interactive: true
