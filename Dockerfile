@@ -4,10 +4,13 @@ WORKDIR /app/frontend
 COPY frontend/package*.json ./
 RUN npm install
 COPY frontend/ ./
+# Increase memory limit for the React build process
+ENV NODE_OPTIONS=--max-old-space-size=4096
 RUN npm run build
 
 # Stage 2: Build Spring Boot Backend
-FROM maven:3.8.5-openjdk-11 as backend-builder
+# Use a slimmer base image to conserve resources
+FROM maven:3.8-openjdk-11-slim as backend-builder
 WORKDIR /app/backend
 COPY backend/pom.xml .
 RUN mvn dependency:go-offline
