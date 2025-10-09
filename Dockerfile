@@ -3,13 +3,16 @@ FROM node:18-alpine as frontend-builder
 WORKDIR /app/frontend
 COPY frontend/package*.json ./
 RUN npm install
-COPY frontend/ ./
+
+# Explicitly copy the public and src directories to invalidate the cache
+COPY frontend/public ./public
+COPY frontend/src ./src
+
 # Increase memory limit for the React build process
 ENV NODE_OPTIONS=--max-old-space-size=4096
 RUN npm run build
 
 # Stage 2: Build Spring Boot Backend
-# Use a slimmer base image to conserve resources
 FROM maven:3.8-openjdk-11-slim as backend-builder
 WORKDIR /app/backend
 COPY backend/pom.xml .
