@@ -3,25 +3,29 @@ pipeline {
 
     environment {
         DOCKERHUB_CREDENTIALS = credentials('dockerhub-credentials')
-        DOCKER_IMAGE = "subhamagarwal05/scientific-calculator"
+        DOCKER_IMAGE = "subhamagarwal05/scientific-calculator" // Use your DockerHub username
     }
 
     stages {
         stage('Clone Repository') {
             steps {
-                git branch: 'main', url: 'https://github.com/subham-agarwal05/scientific-calculator-devops.git'
+                git branch: 'main', url: 'https://github.com/subham-agarwal05/scientific-calculator-devops.git' // Use your repo URL
+            }
+        }
+
+        stage('Run Backend Tests') {
+            steps {
+                // Run Maven tests from the backend directory
+                dir('backend') {
+                    sh 'mvn test'
+                }
             }
         }
 
         stage('Build Docker Image') {
             steps {
+                // The multi-stage Dockerfile now handles the entire build
                 sh 'docker build -t $DOCKER_IMAGE .'
-            }
-        }
-
-        stage('Run Tests Inside Container') {
-            steps {
-                sh 'docker run --rm $DOCKER_IMAGE python -m pytest test_calculator.py'
             }
         }
 
@@ -34,7 +38,6 @@ pipeline {
 
         stage('Deploy with Ansible') {
             steps {
-                // This will now work because the executable is in a standard location
                 sh 'ansible-playbook ansible/deploy.yml'
             }
         }
