@@ -2,7 +2,7 @@
 
 A CLI-based scientific calculator deployed via a complete CI/CD pipeline.
 
-## 🚀 Pipeline Flow.
+## 🚀 Pipeline Flow
 1. Push to GitHub → triggers webhook
 2. Jenkins pipeline runs tests, builds Docker image
 3. Pushes image to Docker Hub
