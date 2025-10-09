@@ -6,50 +6,66 @@ function App() {
     const [b, setB] = useState('');
     const [operation, setOperation] = useState('sqrt');
     const [result, setResult] = useState(null);
+    const [error, setError] = useState('');
 
     const handleCalculate = async () => {
+        setResult(null);
+        setError('');
         try {
-            // NOTE: In a real app, you would configure this URL
-            const response = await fetch('http://localhost:8080/api/calculate', {
+            const response = await fetch('/api/calculate', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ operation, x, b }),
+                body: JSON.stringify({ operation, x, b: operation === 'power' ? b : undefined }),
             });
+            
+            if (!response.ok) {
+                const errText = await response.text();
+                throw new Error(errText || 'An error occurred during calculation.');
+            }
+
             const data = await response.json();
             setResult(data);
-        } catch (error) {
-            console.error("Calculation failed:", error);
-            setResult("Error!");
+        } catch (err) {
+            setError(err.message);
         }
     };
 
     return (
         <div className="App">
             <h1>Scientific Calculator</h1>
-            <div className="calculator">
-                <select value={operation} onChange={(e) => setOperation(e.target.value)}>
+            <div className="calculator-grid">
+                <select className="operation-select" value={operation} onChange={(e) => setOperation(e.target.value)}>
                     <option value="sqrt">Square Root (√x)</option>
                     <option value="factorial">Factorial (x!)</option>
                     <option value="log">Natural Log (ln(x))</option>
                     <option value="power">Power (x^b)</option>
                 </select>
+                
                 <input
                     type="number"
                     value={x}
                     onChange={(e) => setX(e.target.value)}
                     placeholder="Enter value for x"
+                    className="input-x"
                 />
-                {operation === 'power' && (
+
+                {operation === 'power' ? (
                     <input
                         type="number"
                         value={b}
                         onChange={(e) => setB(e.target.value)}
                         placeholder="Enter value for b"
+                        className="input-b"
                     />
+                ) : (
+                    <div className="placeholder-b"></div>
                 )}
-                <button onClick={handleCalculate}>Calculate</button>
-                {result !== null && <div className="result">Result: {result}</div>}
+                
+                <button onClick={handleCalculate} className="calculate-button">Calculate</button>
             </div>
+            
+            {result !== null && <div className="result-display success">Result: {result}</div>}
+            {error && <div className="result-display error">{error}</div>}
         </div>
     );
 }
