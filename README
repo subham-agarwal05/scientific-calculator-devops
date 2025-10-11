@@ -1,0 +1,161 @@
+# Scientific Calculator with DevOps
+
+A scientific calculator web application (Spring Boot backend + React frontend) with an automated DevOps pipeline using Jenkins, Docker, and Ansible.
+
+---
+
+## Features
+
+* Square Root (√x)
+* Factorial (!x)
+* Natural Logarithm (ln x)
+* Power Function (x^b)
+
+---
+
+## Tech Stack
+
+* **Backend:** Spring Boot (Java 17), Maven, JUnit
+* **Frontend:** React, Node.js, npm
+* **CI/CD:** Jenkins
+* **Containerization:** Docker
+* **Configuration & Deployment:** Ansible
+* **Source Control:** Git / GitHub
+
+---
+
+## Repo Structure
+
+```
+.
+├── backend/                 # Spring Boot service
+│   ├── src/main/java/...    # application code
+│   ├── src/test/java/...    # JUnit tests
+│   └── pom.xml              # Maven config
+│
+├── frontend/                # React app
+│   ├── src/                 # components & styles
+│   └── package.json         # npm config
+│
+├── ansible/                 # Ansible playbooks
+│   └── deploy.yml
+│
+├── Dockerfile               # Builds runnable image
+├── Jenkinsfile              # CI/CD pipeline definition
+└── README.md
+```
+
+---
+
+## Quickstart (local)
+
+### Prerequisites
+
+* Java 17+
+* Maven
+* Node.js + npm
+* Docker
+
+### Clone
+
+```bash
+git clone https://github.com/subham-agarwal05/scientific-calculator-devops.git
+cd scientific-calculator-devops
+```
+
+### Build backend
+
+```bash
+cd backend
+mvn clean install
+```
+
+### Build frontend
+
+```bash
+cd ../frontend
+npm install
+npm run build
+```
+
+### Build and run Docker image
+
+```bash
+# from repo root
+docker build -t subham05/scientific-calculator .
+docker run -d -p 8080:8080 --name scientific-calculator subham05/scientific-calculator
+```
+
+Open: `http://localhost:8080`
+
+---
+
+## CI/CD (Jenkins)
+
+The included `Jenkinsfile` implements a pipeline that:
+
+1. Checks out code from GitHub
+2. Builds and tests the backend (Maven) and frontend (npm)
+3. Builds a Docker image and tags it
+4. Pushes the image to Docker Hub
+5. Triggers Ansible to deploy the image to managed hosts
+
+Basic Jenkins steps (example):
+
+```groovy
+pipeline {
+  agent any
+  stages {
+    stage('Checkout') { steps { checkout scm } }
+    stage('Build') { steps { sh 'mvn -f backend clean package -DskipTests=false' } }
+    stage('Frontend Build') { steps { sh 'npm --prefix frontend install && npm --prefix frontend run build' } }
+    stage('Docker Build & Push') {
+      steps {
+        sh 'docker build -t ${DOCKERHUB_REPO}:${TAG} .'
+        sh 'docker push ${DOCKERHUB_REPO}:${TAG}'
+      }
+    }
+    stage('Deploy') { steps { sh 'ansible-playbook -i inventory ansible/deploy.yml' } }
+  }
+}
+```
+
+> Add credentials in Jenkins for GitHub and Docker Hub and configure nodes with Docker/Ansible as needed.
+
+---
+
+## Ansible (deploy example)
+
+`ansible/deploy.yml` pulls the Docker image and runs the container on target hosts. Example command to run playbook:
+
+```bash
+ansible-playbook -i inventory ansible/deploy.yml --ask-become-pass
+```
+
+Ensure the inventory lists your target hosts and each host can run Docker.
+
+---
+
+## Tests
+
+### Backend
+
+Run unit tests with Maven:
+
+```bash
+cd backend
+mvn test
+```
+
+### Frontend
+
+Run lint/tests (if present):
+
+```bash
+cd frontend
+npm test
+```
+
+---
+
+
