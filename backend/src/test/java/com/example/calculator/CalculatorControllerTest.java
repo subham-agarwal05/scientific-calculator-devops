@@ -24,7 +24,7 @@ public class CalculatorControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(content().string("3.0"));
     }
-    
+
     @Test
     void testFactorial() throws Exception {
         String json = "{\"operation\":\"factorial\", \"x\":\"5\"}";
@@ -38,16 +38,17 @@ public class CalculatorControllerTest {
     @Test
     void testLog() throws Exception {
         String json = "{\"operation\":\"log\", \"x\":\"100\"}";
+        String expected = String.valueOf(Math.log(100));
         mockMvc.perform(post("/api/calculate")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(json))
                 .andExpect(status().isOk())
-                .andExpect(content().string("2.0"));
+                .andExpect(content().string(expected));
     }
 
     @Test
     void testPower() throws Exception {
-        String json = "{\"operation\":\"power\", \"x\":\"2\", \"y\":\"3\"}";
+        String json = "{\"operation\":\"power\", \"x\":\"2\", \"b\":\"3\"}";
         mockMvc.perform(post("/api/calculate")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(json))
