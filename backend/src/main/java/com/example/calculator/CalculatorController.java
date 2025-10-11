@@ -5,7 +5,7 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/api")
-@CrossOrigin // Allow requests from the React frontend
+@CrossOrigin 
 public class CalculatorController {
 
     @PostMapping("/calculate")

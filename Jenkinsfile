@@ -3,7 +3,7 @@ pipeline {
 
     environment {
         DOCKERHUB_CREDENTIALS = credentials('dockerhub-credentials')
-        DOCKER_IMAGE = "subhamagarwal05/scientific-calculator" // Use your DockerHub username
+        DOCKER_IMAGE = "subhamagarwal05/scientific-calculator" 
     }
 
     stages {
@@ -15,7 +15,7 @@ pipeline {
 
         stage('Run Backend Tests') {
             steps {
-                // Run Maven tests from the backend directory
+               
                 dir('backend') {
                     sh 'mvn test'
                 }
@@ -24,7 +24,6 @@ pipeline {
 
         stage('Build Docker Image') {
             steps {
-                // The multi-stage Dockerfile now handles the entire build
                 sh 'docker build -t $DOCKER_IMAGE .'
             }
         }

@@ -6,7 +6,7 @@
   tasks:
     - name: Pull image from Docker Hub
       community.docker.docker_image:
-        name: subhamagarwal05/scientific-calculator # Use your DockerHub username
+        name: subhamagarwal05/scientific-calculator 
         source: pull
 
     - name: Stop and remove existing container if it exists
@@ -17,8 +17,8 @@
     - name: Run calculator container
       community.docker.docker_container:
         name: calculator_app
-        image: subhamagarwal05/scientific-calculator # Use your DockerHub username
+        image: subhamagarwal05/scientific-calculator 
         state: started
         ports:
-          - "8081:8080" # Map container port 8080 to host port 8081
+          - "8081:8080" 
         restart_policy: always
