@@ -9,7 +9,7 @@ A CLI-based scientific calculator deployed via a complete CI/CD pipeline.
 4. Ansible pulls image and runs container locally
 5. Email notification on success/failure
 
-## 🧰 Tools.
+## 🧰 Tools
 - **SCM:** GitHub  
 - **CI/CD:** Jenkins  
 - **Build:** Docker  
