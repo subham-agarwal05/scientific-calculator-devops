@@ -21,7 +21,7 @@ COPY backend/ .
 RUN mvn package -DskipTests
 
 # Final stage
-FROM openjdk:11-jre-slim
+FROM eclipse-temurin:11-jre
 WORKDIR /app
 
 # Copy backend JAR
