@@ -20,7 +20,7 @@ RUN mvn dependency:go-offline
 COPY backend/ .
 RUN mvn package -DskipTests
 
-# Final stage
+# Final stage.
 FROM eclipse-temurin:11-jre
 WORKDIR /app
 
